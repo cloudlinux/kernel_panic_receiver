@@ -48,7 +48,7 @@ service netconsole restart
 
 **1.** Clone this repository
 ```
-git clone https://clgit.com/thisrepo; cd ./thisrepo
+git clone https://github.com/cloudlinux/kernel_panic_receiver; cd ./kernel_panic_receiver
 ```
 **2.** Run install.sh as root (you should have Python3 installed on your server)
 ```
