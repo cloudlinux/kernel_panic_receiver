@@ -58,7 +58,7 @@ sudo ./install.sh
 
 ## Usage
 
-All examples you can find in the ./examples directory.
+You can find all examples in the ./examples directory.
 
 #### The simplest example with parsing kernel version
 
