@@ -24,6 +24,8 @@ then
 	exit 1
 fi
 
+mkdir -p "$INSTALLPATH"
+
 cp "$NAME" "$INSTALLPATH/"
 
 if [ "$?" == "0" ]

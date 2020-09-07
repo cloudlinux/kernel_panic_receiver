@@ -27,10 +27,17 @@ class KernelPanicReceiver(object):
 
     @staticmethod
     def default_parser_title__(addr, klogs):
-        title = find_and_slice(klogs, "BUG")
+        key_words = [ "BUG", "Kernel panic", "kernel stack overflow", "divide error", "general protection fault", "SMP" ]
+        for key in key_words:
+            title = find_and_slice(klogs, key)
+            if title is not None:
+                break
         if title is None:
             title = "Unknown error"
         title = " ".join(title.split())
+        idx = klogs.find("[kmdolve]")
+        if idx != -1:
+            title = "[kmodlve] " + title
         return title
 
     @staticmethod
