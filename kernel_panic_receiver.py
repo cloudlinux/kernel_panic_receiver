@@ -35,7 +35,7 @@ class KernelPanicReceiver(object):
         if title is None:
             title = "Unknown error"
         title = " ".join(title.split())
-        idx = klogs.find("[kmdolve]")
+        idx = klogs.find("[kmodlve]")
         if idx != -1:
             title = "[kmodlve] " + title
         return title
