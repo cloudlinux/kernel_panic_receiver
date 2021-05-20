@@ -2,13 +2,13 @@
 
 Kernel Panic Receiver is a simple Python library for processing kernel panic logs and sending them to Sentry.
 
-The only thing the tool does is receiving UDP packages with kernel panic logs from different hosts and calling different hooks (whether default or user-defined) that parse logs and return the specific value that will be sent to Sentry.
+The only thing the tool does is receiving UDP/TCP packages with kernel panic logs from different hosts and calling different hooks (whether default or user-defined) that parse logs and return the specific value that will be sent to Sentry.
 
 ## Installation
 
 You have to set up clients' machines (on which there will be panics supposed) and a server where Kernel Panic Receiver will work (it may be a server where Sentry works). When panic is happening a kernel (client) sends the logs to your server with Kernel Panic Receiver, it receives the logs, processes them and sends to Sentry.
 
-### Installation on a client (kernel) side
+### Installation on a client (kernel) side (the method is supposed to send UDP packages)
 
 **CloudLinux**
 
@@ -80,21 +80,29 @@ def parse_kernel_version(addr, klogs):
 
     return ['kernel_version', klogs[start_idx:end_idx]]
 
-kreceiver = kernel_panic_receiver.KernelPanicReceiver('your-server-ip', 514, 'https://dsn_sentry')
+kreceiver = kernel_panic_receiver.KernelPanicReceiver('0.0.0.0', 514, 'UDP', 'https://dsn_sentry')
 kreceiver.register_parser_tag(parse_kernel_version)
 kreceiver.start_receiving_logs()
 
 ```
 
-your-server-ip - is your server's IP a listening socket will be bound with.
-
 dsn_sentry - Sentry DSN. You can find it in the project settings in the Sentry web interface.
 
 ## API Reference
 ```python
-class KernelPanicReceiver(listen_ip, listen_port, sentry_dsn):
+class KernelPanicReceiver(listen_ip, listen_port, protocol, sentry_dsn):
 ```
-The main class. Takes three parameters: an IP / port it will listen to and the Sentry's DSN.
+The main class. Takes four parameters: an IP / port it will listen to, a protocol UDP/TCP, and the Sentry's DSN.
+
+```python
+method register_check_hook(function)
+```
+
+Register a function that will be called right after a panic is received. The function may do some checks and filters and return what the KPR should proceed with. If it returns None the KPR will discard a panic.
+
+Function prototype: `def check_validity(addr, klogs)` where addr is a list of IP and port, klogs is a string with all panic logs.
+
+Return value: none
 
 ```python
 method register_parser_title(function)

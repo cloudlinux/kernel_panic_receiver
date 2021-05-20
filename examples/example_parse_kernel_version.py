@@ -10,7 +10,7 @@
 
 import kernel_panic_receiver
 
-local_server_ip = 'YOUR-LOCAL-SERVER-IP'
+local_server_ip = '0.0.0.0'
 local_server_port = 514 
 sentry_dsn = 'YOUR-SENTRY-DSN'
 
@@ -29,7 +29,7 @@ def parse_kernel_version(addr, klogs):
 
     return ['kernel_version', klogs[start_idx:end_idx]]
 
-kreceiver = kernel_panic_receiver.KernelPanicReceiver(local_server_ip, local_server_port, sentry_dsn)
+kreceiver = kernel_panic_receiver.KernelPanicReceiver(local_server_ip, local_server_port, "UDP", sentry_dsn)
 
 kreceiver.register_parser_tag(parse_kernel_version)
 
